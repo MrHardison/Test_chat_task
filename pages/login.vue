@@ -28,29 +28,20 @@ export default {
 	name: 'Login',
 	components: {
 		btn
-	},
+  },
+  middleware: 'login',
 	data() {
 		return {
 			username: '',
 			error: false
 		}
 	},
-	computed: {
-		...mapGetters({ getUsername: 'storeData/getUsername' })
-	},
-	beforeMount() {
-		if (this.getUsername) {
-			console.log(this.getUsername)
-			this.$router.push('/')
-		}
-	},
 	methods: {
-		...mapMutations({ setUsername: 'storeData/setUsername' }),
 		login() {
 			if (this.username.length < 2) {
 				return this.error = true
-			}
-			this.setUsername(this.username)
+      }
+      localStorage.setItem('username', this.username)
 			this.$router.push('/')
 		}
 	}

@@ -8,13 +8,9 @@ import { mapGetters, mapMutations } from 'vuex'
 
 export default {
 	components: {},
+	middleware: 'index',
 	computed: {
 		...mapGetters({ username: 'storeData/getUsername' })
-	},
-	beforeMount() {
-		if (this.username === false) {
-			this.$router.push('/login')
-		}
 	},
 	methods: {
 		...mapMutations({ setDefault: 'storeData/setUsername' })
