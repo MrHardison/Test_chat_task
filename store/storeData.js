@@ -1,18 +1,18 @@
 export const state = () => ({
-  username: false
+  messages: []
 })
 
 export const mutations = {
-  setUsername(state, data) {
-    state.username = data
+  addMessage(state, data) {
+    state.messages.push(data)
   },
-  unsetUsername(state) {
-    state.username = ''
+  clearMessages(state) {
+    state.messages = []
   }
 }
 
 export const getters = {
-  getUsername(state) {
-    return state.username
+  getMessages(state) {
+    return state.messages
   }
 }
