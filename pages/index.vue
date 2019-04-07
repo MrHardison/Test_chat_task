@@ -7,8 +7,14 @@
 				<li
 					:key=index
 					class="message">
-					<div class="text">{{ message.text }}</div>
-					<div class="date">{{ message.date }}</div>
+					<div class="message-user">{{message.user}}</div>
+					<div class="message-content">
+						<div class="text">{{ message.text }}</div>
+						<div class="date">{{ message.date }}</div>
+					</div>
+					<div
+						class="message-edit"
+						@click="editMessage(message.text)">[!]</div>
 				</li>
 			</template>
 		</ul>
@@ -38,7 +44,8 @@ export default {
 	middleware: 'index',
 	data() {
 		return {
-			message: ''
+			message: '',
+			edit: false
 		}
 	},
 	computed: {
@@ -59,6 +66,9 @@ export default {
 				user: this.getCurrentUser,
 				date: this.getCurrentTime
 			})
+		},
+		editMessage(message) {
+			this.edit = true
 		}
 	}
 }
@@ -74,9 +84,31 @@ export default {
 		box-shadow: 0 1px 20px -2px rgba(#000, .3)
 
 		.message
-			padding: 5px 0
+			position: relative
+			padding: 5px 10px
+
+			&-edit
+				display: none
+				cursor: pointer
+				height: 25px
+				position: absolute
+				right: 10px
+				top: 5px
+				width: 25px
 
 			& ~ .message
 				border-top: 1px solid #030303
+
+			&-user
+				display: flex
+				justify-content: flex-start
+
+			&-content
+				display: flex
+				justify-content: space-between
+
+			&:hover
+				.message-edit
+					display: block
 </style>
 
