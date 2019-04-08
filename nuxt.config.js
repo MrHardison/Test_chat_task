@@ -15,7 +15,11 @@ module.exports = {
 			{
 				rel: 'stylesheet',
 				href: 'https://fonts.googleapis.com/css?family=Open+Sans:300,400,700&amp;subset=cyrillic'
-			}
+      },
+      {
+        rel: 'stylesheet',
+        href: 'https://use.fontawesome.com/releases/v5.7.2/css/all.css'
+      }
     ]
   },
   /*
@@ -44,7 +48,29 @@ module.exports = {
   */
  	modules: [
 	// Global sass
-		['@nuxtjs/style-resources']
+    ['@nuxtjs/style-resources'],
+
+    // Using FontAwesome as module
+    [
+      'nuxt-fontawesome',
+      {
+        component: 'fa',
+        imports: [
+          {
+            set: '@fortawesome/free-solid-svg-icons',
+            icons: ['fas']
+          },
+          {
+            set: '@fortawesome/free-brands-svg-icons',
+            icons: ['fab']
+          },
+          {
+            set: '@fortawesome/free-regular-svg-icons',
+            icons: ['far']
+          }
+        ]
+      }
+    ]
 	],
 
 	styleResources: {

@@ -14,7 +14,11 @@
 					</div>
 					<div
 						class="message-edit"
-						@click="editMessage(message.text)">[!]</div>
+						@click="editMessage(message.text)">
+          <fa
+            :icon="['far', 'edit']"
+            class="fa-icon" />
+          </div>
 				</li>
 			</template>
 		</ul>
