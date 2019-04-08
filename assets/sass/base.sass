@@ -7,6 +7,7 @@ html
 	box-sizing: inherit
 
 body
+	background: $grey-xlight
 	font-family: 'Open Sans', sans-serif
 	height: 100%
 	margin: 0
@@ -26,11 +27,15 @@ a
 
 .container
 	height: 100%
+	display: flex
 	margin: 0 auto
 	max-width: 1170px
 	padding: 0 15px
 	position: relative
 	text-align: center
+
+	&.p-0
+		padding: 0
 
 h1.h1
 	color: #000
@@ -51,6 +56,6 @@ h3.h3
 	text-align: left
 
 .text
-	color: $blue-dark
+	color: $black
 	font: 20px/32px inherit
 	text-align: left
