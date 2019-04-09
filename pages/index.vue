@@ -5,6 +5,9 @@
 				<div
 					class="logout"
 					@click="logout">
+					<fa
+						:icon="['fas', 'sign-out-alt']"
+						class="fa-icon" />
 					Logout
 				</div>
 			</div>
@@ -42,7 +45,9 @@
 									:icon="['far', 'edit']"
 									class="fa-icon" />
 							</div>
-							<div class="delete">
+							<div
+								class="delete"
+								@click="deleteMessage">
 								<fa
 									:icon="['far', 'trash-alt']"
 									class="fa-icon" />
@@ -55,55 +60,46 @@
 					<ul
 						class="list">
 						<template v-for="(message, index) in messageList">
-							<li
-								:key=index
-								class="message"
-								@click="selectMessage(message)">
-								<div class="message-user">{{message.user}}</div>
-								<div class="message-content">
-									<div class="text">{{ message.text }}</div>
-									<div class="date">{{ message.date }}</div>
-								</div>
-								<!-- <div
-									v-if="message.user === getCurrentUser"
-									class="message-edit"
-									@click="editMessage(message.text)">
-								<fa
-									:icon="['far', 'edit']"
-									class="fa-icon" />
-								</div>
-								<div
-									v-if="message.user === getCurrentUser"
-									class="message-delete"
-									@click="deleteMessage(message)">
-								<fa
-									:icon="['far', 'trash-alt']"
-									class="fa-icon" />
-								</div> -->
-							</li>
+							<transition
+								:key="index"
+								name="fade">
+								<li
+									:class="{selected: selectedMessage === message, pointer: getCurrentUser === message.user}"
+									class="message"
+									@click="getCurrentUser === message.user && selectMessage(message)">
+									<div class="message-user">{{message.user}}</div>
+									<div class="message-content">
+										<div class="text">{{ message.text }}</div>
+										<div class="date">{{ message.date }}</div>
+									</div>
+								</li>
+							</transition>
 						</template>
 					</ul>
 				</div>
 			</div>
-			<div class="input-container">
+			<form class="input-container">
 				<div class="input-block">
 					<input
 						v-model="message"
+						ref="textField"
 						type="text"
-						placeholder="Enter the message"
+						placeholder="Start typing your message..."
 						maxlength="255">
 				</div>
 				<btn
 					v-if="!edit"
-					@click.native="addNewMessage">
-					add
+					class="confirm"
+					@click.prevent.native="addNewMessage">
+					Send
 				</btn>
 				<btn
 					v-else
-					@click.native="saveEditedMessage">
-					edit
+					class="confirm"
+					@click.prevent.native="saveEditedMessage">
+					Edit
 				</btn>
-			</div>
+			</form>
 		</section>
 	</div>
 </template>
@@ -147,12 +143,14 @@ export default {
 			updateMessages: 'data/updateMessages'
 		}),
 		addNewMessage() {
-			this.addMessage({
-				text: this.message,
-				user: this.getCurrentUser,
-				date: this.getCurrentTime
-			})
-			this.message = ''
+			if (this.message.length) {
+				this.addMessage({
+					text: this.message,
+					user: this.getCurrentUser,
+					date: this.getCurrentTime
+				})
+				this.message = ''
+			}
 		},
 		selectMessage(message) {
 			this.selectedMessage = message
@@ -160,13 +158,23 @@ export default {
 		},
 		editMessage() {
 			this.edit = true
-			thie.selectMessage.text = this.message
+			this.panel = false
+			this.message = this.selectedMessage.text
+			this.$refs.textField.focus()
 		},
 		saveEditedMessage() {
-			this.selectMessage.text = this.message
-			this.updateMessages(this.messageList)
-			this.message = ''
-			this.edit = false
+			if (this.message.length) {
+				const item = _.find(this.messageList, this.selectedMessage)
+				item.text = this.message
+				this.updateMessages(this.messageList)
+				this.message = ''
+				this.edit = false
+			}
+		},
+		deleteMessage() {
+			this.panel = false
+			const newList = _.without(this.messageList, this.selectedMessage)
+			this.updateMessages(newList)
 		},
 		closePanel() {
 			this.panel = false
@@ -205,7 +213,20 @@ export default {
 		width: 1170px
 
 	.logout
+		color: #fff
+		align-items: center
+		display: flex
+		font-size: 14px
+		transition: opacity .3s ease-in-out
+		text-transform: uppercase
 		cursor: pointer
+
+		&:hover
+			opacity: .7
+
+		& > .fa-icon
+			font-size: 16px
+			margin-right: 10px
 
 .content
 	background: #fff
@@ -239,13 +260,13 @@ export default {
 
 			.functions
 				align-items: center
-				background: $grey-light
+				background: #656565
 				display: flex
 				height: 100%
 				left: 50%
 				padding: 0 60px
 				position: absolute
-				transition: transform .3s
+				transition: transform .3s ease-in-out
 				top: 0
 				transform: translate(-50%, -100%)
 				justify-content: space-between
@@ -258,12 +279,12 @@ export default {
 				.close
 					color: #CDCDCD
 					font-size: 14px
-					transition: color .3s
+					transition: opacity .3s ease-in-out
 					text-transform: uppercase
 					cursor: pointer
 
 					&:hover
-						color: $black
+						opacity: .7
 
 				.edit, .delete
 					color: #CDCDCD
@@ -271,10 +292,10 @@ export default {
 					font-size: 20px
 					display: inline-flex
 					margin-left: 20px
-					transition: color .3s
+					transition: opacity .3s ease-in-out
 
 					&:hover
-						color: $black
+						opacity: .7
 
 				.edit
 					margin-left: 0
@@ -304,7 +325,6 @@ export default {
 			height: 90%
 			overflow-x: hidden
 			overflow-y: auto
-			padding: 0 60px
 			width: 100%
 
 			.list
@@ -315,10 +335,17 @@ export default {
 					align-items: center
 					display: flex
 					flex-wrap: wrap
-					padding: 20px 0
+					padding: 20px 60px
 					position: relative
+					transition: background .3s ease-in-out
 					justify-content: space-between
 					width: 100%
+
+					&.pointer
+						cursor: pointer
+
+					&.selected
+						background: rgba($blue, .1)
 
 					&-user
 						color: #000
@@ -339,8 +366,8 @@ export default {
 							font-size: 14px
 
 						.date
+							color: $grey-dark
 							font-size: 14px
-							color: #D1D1D1
 
 					& ~ .message
 						border-top: 1px solid $grey
@@ -351,6 +378,33 @@ export default {
 		display: flex
 		height: 15%
 		padding: 0 60px
+		justify-content: space-between
 		width: 100%
+
+		.input-block
+			width: 70%
+
+			input
+				font-size: 16px
+				height: 30px
+
+				&::placeholder
+					font-size: 14px
+
+		.confirm
+			color: #fff
+			cursor: pointer
+			background: $blue
+			border: none
+			min-width: 110px
+			border-radius: 2px
+			padding: 14px 36px
+			text-transform: uppercase
+
+.fade-enter-active, .fade-leave-active
+  transition: opacity .5s
+
+.fade-enter, .fade-leave-to
+  opacity: 0
 </style>
 
