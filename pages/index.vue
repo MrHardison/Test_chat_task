@@ -19,29 +19,71 @@
 			</div>
 			<div
 				v-else
-				class="list-container">
-				<ul
-					class="list">
-					<template v-for="(message, index) in messageList">
-						<li
-							:key=index
-							class="message">
-							<div class="message-user">{{message.user}}</div>
-							<div class="message-content">
-								<div class="text">{{ message.text }}</div>
-								<div class="date">{{ message.date }}</div>
-							</div>
-							<div
-								v-if="message.user === getCurrentUser"
-								class="message-edit"
-								@click="editMessage(message.text)">
+				class="wrapper">
+				<div class="user-container">
+					<span class="username">{{ getCurrentUser }}</span>
+					<span class="status">online</span>
+					<div
+						:class="{active: panel}"
+						class="functions">
+						<div
+							class="close"
+							@click="closePanel">
 							<fa
-								:icon="['far', 'edit']"
+								:icon="['fas', 'times']"
 								class="fa-icon" />
+								Close
+						</div>
+						<div>
+							<div
+								class="edit"
+								@click="editMessage">
+								<fa
+									:icon="['far', 'edit']"
+									class="fa-icon" />
 							</div>
-						</li>
-					</template>
-				</ul>
+							<div class="delete">
+								<fa
+									:icon="['far', 'trash-alt']"
+									class="fa-icon" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div
+					class="list-container">
+					<ul
+						class="list">
+						<template v-for="(message, index) in messageList">
+							<li
+								:key=index
+								class="message"
+								@click="selectMessage(message)">
+								<div class="message-user">{{message.user}}</div>
+								<div class="message-content">
+									<div class="text">{{ message.text }}</div>
+									<div class="date">{{ message.date }}</div>
+								</div>
+								<!-- <div
+									v-if="message.user === getCurrentUser"
+									class="message-edit"
+									@click="editMessage(message.text)">
+								<fa
+									:icon="['far', 'edit']"
+									class="fa-icon" />
+								</div>
+								<div
+									v-if="message.user === getCurrentUser"
+									class="message-delete"
+									@click="deleteMessage(message)">
+								<fa
+									:icon="['far', 'trash-alt']"
+									class="fa-icon" />
+								</div> -->
+							</li>
+						</template>
+					</ul>
+				</div>
 			</div>
 			<div class="input-container">
 				<div class="input-block">
@@ -78,7 +120,8 @@ export default {
 		return {
 			message: '',
 			edit: false,
-			editItem: {}
+			panel: false,
+			selectedMessage: {}
 		}
 	},
 	computed: {
@@ -95,7 +138,7 @@ export default {
 		},
 		getCurrentTime() {
 			const date = new Date()
-			return `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()} ${date.getFullYear()}`
+			return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1")
 		}
 	},
 	methods: {
@@ -109,18 +152,25 @@ export default {
 				user: this.getCurrentUser,
 				date: this.getCurrentTime
 			})
+			this.message = ''
 		},
-		editMessage(message) {
+		selectMessage(message) {
+			this.selectedMessage = message
+			this.panel = true
+		},
+		editMessage() {
 			this.edit = true
-			this.message = message
-			this.editItem = _.find(this.messageList, {
-				text: message
-			})
+			thie.selectMessage.text = this.message
 		},
 		saveEditedMessage() {
-			this.editItem.text = this.message
+			this.selectMessage.text = this.message
 			this.updateMessages(this.messageList)
+			this.message = ''
 			this.edit = false
+		},
+		closePanel() {
+			this.panel = false
+			this.selectedMessage = {}
 		},
 		logout() {
 			localStorage.setItem('username', '')
@@ -172,47 +222,134 @@ export default {
 		height: 250px
 		width: 100%
 
-	.list-container
-		height: 75%
-		display: flex
-		overflow-x: hidden
-		overflow-y: auto
+	.wrapper
+		height: 85%
 		width: 100%
 
-		.list
-			height: auto
+		.user-container
+			align-items: center
+			background: $grey-light
+			display: flex
+			height: 10%
+			overflow: hidden
+			padding: 0 60px
+			position: relative
+			justify-content: flex-start
+			width: 100%
 
-			.message
-				position: relative
-				padding: 5px 10px
+			.functions
+				align-items: center
+				background: $grey-light
+				display: flex
+				height: 100%
+				left: 50%
+				padding: 0 60px
+				position: absolute
+				transition: transform .3s
+				top: 0
+				transform: translate(-50%, -100%)
+				justify-content: space-between
+				width: 100%
+				z-index: 2
 
-				&-edit
+				&.active
+					transform: translate(-50%, 0)
+
+				.close
+					color: #CDCDCD
+					font-size: 14px
+					transition: color .3s
+					text-transform: uppercase
 					cursor: pointer
-					height: 25px
-					position: absolute
-					right: 10px
-					top: 5px
-					width: 25px
 
 					&:hover
-						color: red
-						display: block
+						color: $black
 
-				& ~ .message
-					border-top: 1px solid #030303
+				.edit, .delete
+					color: #CDCDCD
+					cursor: pointer
+					font-size: 20px
+					display: inline-flex
+					margin-left: 20px
+					transition: color .3s
 
-				&-user
+					&:hover
+						color: $black
+
+				.edit
+					margin-left: 0
+
+			.username
+				font-size: 18px
+				text-transform: capitalize
+
+			.status
+				align-items: center
+				font-size: 10px
+				text-transform: uppercase
+				display: inline-flex
+				margin-left: 10px
+
+				&::before
+					border-radius: 50%
+					background: $green
+					content: ''
+					display: inline
+					height: 7px
+					margin-right: 5px
+					width: 7px
+
+		.list-container
+			display: flex
+			height: 90%
+			overflow-x: hidden
+			overflow-y: auto
+			padding: 0 60px
+			width: 100%
+
+			.list
+				padding: 30px 0
+				width: 100%
+
+				.message
+					align-items: center
 					display: flex
-					justify-content: flex-start
-
-				&-content
-					display: flex
+					flex-wrap: wrap
+					padding: 20px 0
+					position: relative
 					justify-content: space-between
+					width: 100%
+
+					&-user
+						color: #000
+						display: flex
+						font-size: 18px
+						margin-bottom: 10px
+						text-transform: capitalize
+						justify-content: flex-start
+						width: 100%
+
+					&-content
+						display: flex
+						justify-content: space-between
+						width: 100%
+
+						.text
+							color: $black
+							font-size: 14px
+
+						.date
+							font-size: 14px
+							color: #D1D1D1
+
+					& ~ .message
+						border-top: 1px solid $grey
 
 	.input-container
 		align-items: center
 		background: $grey-light
 		display: flex
+		height: 15%
 		padding: 0 60px
 		width: 100%
 </style>
