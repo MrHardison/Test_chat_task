@@ -72,7 +72,7 @@
 									@click="upperCase(getCurrentUser) === upperCase(message.user) && selectMessage(message)">
 									<div class="message-user">{{message.user}}</div>
 									<div class="message-content">
-										<div class="text">{{ message.text }}</div>
+										<p class="text">{{ message.text }}</p>
 										<div class="date">{{ message.date }}</div>
 									</div>
 								</li>
