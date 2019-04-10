@@ -40,6 +40,7 @@ module.exports = {
   */
 	plugins: [
 		'~/plugins/lodash',
+		{ src: '~/plugins/scroll.js', ssr: false },
 		{ src: '~/plugins/localstorage.js', ssr: false }
   ],
 

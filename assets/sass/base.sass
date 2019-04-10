@@ -55,6 +55,8 @@ h3.h3
 	text-align: left
 
 .input-block
+	position: relative
+
 	input
 		background: none
 		border: none
@@ -63,4 +65,8 @@ h3.h3
 		position: relative
 		width: 100%
 
-		&:focus
+.fade-enter-active, .fade-leave-active
+  transition: opacity .5s
+
+.fade-enter, .fade-leave-to
+  opacity: 0
