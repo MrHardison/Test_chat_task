@@ -4,6 +4,7 @@
 			<span class="title">Login</span>
 			<div class="input-block">
 				<input
+					ref="textField"
 					v-model="username"
 					type="text"
 					maxlength="25"
@@ -44,6 +45,9 @@ export default {
 			error: false
 		}
 	},
+	mounted() {
+		this.$refs.textField.focus()
+	},
 	methods: {
 		login() {
 			if (this.username.length < 2) {
@@ -74,18 +78,19 @@ export default {
 		background: #fff
 		box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24)
 		display: flex
+		height: 350px
 		flex-direction: column
-		padding: 20px 30px 40px 30px
+		padding: 20px 30px
 		position: relative
 		justify-content: center
-		width: 350px
+		width: 500px
 
 		.title
-			font-size: 18px
+			font-size: 20px
 			margin-bottom: 30px
 
 		.input-block
-			margin-bottom: 30px
+			margin-bottom: 20px
 			width: 100%
 
 			input
@@ -106,10 +111,15 @@ export default {
 			border-radius: 2px
 			padding: 14px 36px
 			text-transform: uppercase
+			transition: background .3s
 			width: 100%
 
+			&:hover
+				background: #0f71b3
+
+
 		.error
-			bottom: 10px
+			bottom: 30px
 			align-items: center
 			display: flex
 			font-size: 14px

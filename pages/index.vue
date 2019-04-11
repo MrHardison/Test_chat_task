@@ -26,7 +26,7 @@
 							@click="closePanel">
 							<fa
 								:icon="['fas', 'times']"
-								class="fa-icon" />
+								class="panel-icon" />
 								Close
 						</div>
 						<div>
@@ -138,6 +138,9 @@ export default {
 		getCurrentUser() {
 			return localStorage.getItem('username')
 		}
+	},
+	mounted() {
+		this.$refs.textField.focus()
 	},
 	methods: {
 		...mapMutations({
