@@ -71,11 +71,14 @@ export default {
 
 	.window
 		align-items: center
+		background: #fff
 		box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24)
 		display: flex
-		padding: 20px 30px
-		justify-content: center
 		flex-direction: column
+		padding: 20px 30px 40px 30px
+		position: relative
+		justify-content: center
+		width: 350px
 
 		.title
 			font-size: 18px
@@ -86,7 +89,14 @@ export default {
 			width: 100%
 
 			input
+				background: $grey
+				border-radius: 2px
+				font-size: 18px
+				padding-left: 10px
 				height: 40px
+
+				&::placeholder
+					font-size: 16px
 
 		.btn
 			color: #fff
@@ -99,11 +109,15 @@ export default {
 			width: 100%
 
 		.error
+			bottom: 10px
 			align-items: center
 			display: flex
 			font-size: 14px
 			margin-top: 30px
+			left: 30px
+			position: absolute
 			justify-content: flex-start
+			width: 100%
 
 			.error-icon
 				color: $red
