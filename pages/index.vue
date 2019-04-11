@@ -137,17 +137,17 @@ export default {
 		},
 		getCurrentUser() {
 			return localStorage.getItem('username')
-		},
-		getCurrentTime() {
-			const date = new Date()
-			return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1")
 		}
 	},
 	methods: {
 		...mapMutations({
 			addMessage: 'data/addMessage',
 			updateMessages: 'data/updateMessages'
-		}),
+    }),
+    getCurrentTime() {
+			const date = new Date()
+			return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1")
+		},
 		upperCase(string) {
 			return _.toUpper(string)
 		},
@@ -156,7 +156,7 @@ export default {
 				this.addMessage({
 					text: this.message,
 					user: this.getCurrentUser,
-					date: this.getCurrentTime
+					date: this.getCurrentTime()
 				})
 				this.message = ''
 			}
