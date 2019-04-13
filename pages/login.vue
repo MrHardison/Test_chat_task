@@ -22,7 +22,7 @@
 					<fa
 						:icon="['fas', 'exclamation-circle']"
 						class="error-icon" />
-					Username must be more than 1 char
+					Login must be more than 1 char
 				</div>
 			</transition>
 		</form>
@@ -31,7 +31,6 @@
 
 <script>
 import btn from '~/components/button'
-import { mapMutations, mapGetters } from 'vuex'
 
 export default {
 	name: 'Login',
@@ -66,71 +65,4 @@ export default {
 </script>
 
 <style scoper lang="sass">
-.login-container
-	align-items: center
-	height: 100vh
-	display: flex
-	justify-content: center
-	width: 100vw
-
-	.window
-		align-items: center
-		background: #fff
-		box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 1px 2px rgba(0,0,0,.24)
-		display: flex
-		height: 350px
-		flex-direction: column
-		padding: 20px 30px
-		position: relative
-		justify-content: center
-		width: 500px
-
-		.title
-			font-size: 20px
-			margin-bottom: 30px
-
-		.input-block
-			margin-bottom: 20px
-			width: 100%
-
-			input
-				background: $grey
-				border-radius: 2px
-				font-size: 18px
-				padding-left: 10px
-				height: 40px
-
-				&::placeholder
-					font-size: 16px
-
-		.btn
-			color: #fff
-			cursor: pointer
-			background: $blue
-			border: none
-			border-radius: 2px
-			padding: 14px 36px
-			text-transform: uppercase
-			transition: background .3s
-			width: 100%
-
-			&:hover
-				background: #0f71b3
-
-
-		.error
-			bottom: 30px
-			align-items: center
-			display: flex
-			font-size: 14px
-			margin-top: 30px
-			left: 30px
-			position: absolute
-			justify-content: flex-start
-			width: 100%
-
-			.error-icon
-				color: $red
-				font-size: 16px
-				margin-right: 10px
 </style>

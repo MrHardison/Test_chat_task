@@ -101,7 +101,7 @@
 				</btn>
 				<btn
 					v-else
-					class="confirm"
+					class="btn confirm"
 					@click.prevent.native="saveEditedMessage">
 					Edit
 				</btn>
