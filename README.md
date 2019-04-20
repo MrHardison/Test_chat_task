@@ -18,5 +18,6 @@ $ npm start
 # generate static project
 $ npm run generate
 ```
-https://little-chat-task.herokuapp.com/
+
+For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
 

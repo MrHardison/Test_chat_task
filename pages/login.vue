@@ -4,8 +4,8 @@
 			<span class="title">Login</span>
 			<div class="input-block">
 				<input
-					ref="textField"
 					v-model="username"
+					autofocus="true"
 					type="text"
 					maxlength="25"
 					placeholder="Enter your login">
@@ -43,9 +43,6 @@ export default {
 			username: '',
 			error: false
 		}
-	},
-	mounted() {
-		this.$refs.textField.focus()
 	},
 	methods: {
 		login() {

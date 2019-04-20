@@ -6,11 +6,14 @@ export const mutations = {
   addMessage(state, data) {
     state.messages.push(data)
   },
-  updateMessages(state, data) {
-    state.messages = data
+  saveMessage(state, data) {
+		const item = _.find(state.messages, data.item)
+		if (item) {
+			item.text = data.message
+		}
   },
-  clearMessages(state) {
-    state.messages = []
+  deleteMessageFromStore(state, data) {
+    state.messages = _.without(state.messages, data)
   }
 }
 

@@ -161,14 +161,14 @@
 
 			.username
 				font-size: 18px
-				text-transform: capitalize
+				text-transform: uppercase
 
 			.status
 				align-items: center
 				font-size: 10px
 				text-transform: uppercase
 				display: inline-flex
-				margin-left: 10px
+				margin-left: 20px
 
 				&::before
 					border-radius: 50%
@@ -218,9 +218,6 @@
 					word-break: break-all
 					width: 100%
 
-					&:last-child
-						border-bottom: none
-
 					&.pointer
 						cursor: pointer
 
@@ -253,6 +250,7 @@
 							text-align: left
 
 						.date
+							text-align: right
 							color: rgba($blue, .6)
 							font-size: 14px
 							width: 10%

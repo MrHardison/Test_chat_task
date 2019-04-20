@@ -59,26 +59,10 @@
 					v-else
 					v-chat-scroll="{smooth: true, scrollonremoved: true}"
 					class="list-container">
-					<ul
-						ref="list"
-						class="list">
-						<template v-for="(message, index) in messageList">
-							<transition
-								:key="index"
-								name="fade">
-								<li
-									:class="{my: upperCase(getCurrentUser) === upperCase(message.user), selected: selectedMessage === message, pointer: upperCase(getCurrentUser) === upperCase(message.user)}"
-									class="message"
-									@click="upperCase(getCurrentUser) === upperCase(message.user) && selectMessage(message)">
-									<div class="message-user">{{message.user}}</div>
-									<div class="message-content">
-										<p class="text">{{ message.text }}</p>
-										<div class="date">{{ message.date }}</div>
-									</div>
-								</li>
-							</transition>
-						</template>
-					</ul>
+					<messages
+						:message-list="messageList"
+						@selectedMessage="selectedMessage = $event"
+						@panel="panel = $event" />
 				</div>
 			</div>
 			<form class="input-container">
@@ -89,6 +73,7 @@
 					<input
 						v-model="message"
 						ref="textField"
+						autofocus="true"
 						type="text"
 						placeholder="Start typing your message..."
 						maxlength="255">
@@ -113,10 +98,11 @@
 <script>
 
 import btn from '~/components/button'
+import messages from '~/components/messages'
 import { mapGetters, mapMutations } from 'vuex'
 
 export default {
-	components: { btn },
+	components: { btn, messages },
 	middleware: 'index',
 	data() {
 		return {
@@ -129,30 +115,26 @@ export default {
 	computed: {
 		...mapGetters({ messages: 'data/getMessages' }),
 		messageList() {
-			let list = []
-			_.forEach(this.messages, item => {
-				list.push(_.assign({}, item))
-			})
+			const [...list] = this.messages
 			return list
 		},
 		getCurrentUser() {
 			return localStorage.getItem('username')
 		}
 	},
-	mounted() {
-		this.$refs.textField.focus()
-	},
 	methods: {
 		...mapMutations({
 			addMessage: 'data/addMessage',
-			updateMessages: 'data/updateMessages'
+			saveMessage: 'data/saveMessage',
+			deleteMessageFromStore: 'data/deleteMessageFromStore'
     }),
     getCurrentTime() {
-			const date = new Date()
-			return date.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1")
-		},
-		upperCase(string) {
-			return _.toUpper(string)
+			const today = new Date()
+			const date = `${today.getDate()}-${(today.getMonth()+1)}-${today.getFullYear()}`
+			return {
+				time: today.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1"),
+				date: date
+				}
 		},
 		addNewMessage() {
 			if (this.message.length) {
@@ -164,10 +146,6 @@ export default {
 				this.message = ''
 			}
 		},
-		selectMessage(message) {
-			this.selectedMessage = message
-			this.panel = true
-		},
 		editMessage() {
 			this.edit = true
 			this.panel = false
@@ -176,17 +154,17 @@ export default {
 		},
 		saveEditedMessage() {
 			if (this.message.length) {
-				const item = _.find(this.messageList, this.selectedMessage)
-				item.text = this.message
-				this.updateMessages(this.messageList)
+				this.saveMessage({
+					item: this.selectedMessage,
+					message: this.message
+				})
 				this.message = ''
 				this.edit = false
 			}
 		},
 		deleteMessage() {
 			this.panel = false
-			const newList = _.without(this.messageList, this.selectedMessage)
-			this.updateMessages(newList)
+			this.deleteMessageFromStore(this.selectedMessage)
 		},
 		closePanel() {
 			this.panel = false
